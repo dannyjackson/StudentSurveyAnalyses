@@ -133,7 +133,6 @@ tokelsey_new = df[-df['pre_RandomID'].isin(tokelsey['pre_RandomID'])]
 
 tokelsey_new.to_csv("tokelsey_new.csv")
 
-#
 # I need to double check that this isn't doing something wrong with the null values
 
 # one duplicate lacks all values in the pre survey for their "last" entry for the paired surveys. I'm dropping that one before running the drop_duplicates to keep their more informative response. 53714
@@ -201,7 +200,9 @@ df['Religion'].value_counts()
 
 
 
-
+####################################################################################################
+#Continue editing starting here!!!!!
+####################################################################################################
 
 x = (df[df['pre_Race'] != df['post_Race']]).groupby(['pre_QID40', 'post_QID40']).size()
 y = (df[df['pre_Race'] != df['post_Race']]).groupby(['pre_Race', 'post_Race']).size()
