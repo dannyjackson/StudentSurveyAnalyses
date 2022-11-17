@@ -6,7 +6,7 @@ from scipy import stats
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import statsmodels.formula.api as smf
 
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 from sklearn.linear_model import LogisticRegression
@@ -18,20 +18,46 @@ df = pd.read_csv('cleanData_danny.csv')
 # Modeling with interactions
 # in python
 
-import statsmodels.formula.api as smf
+
+list = ['Q1', 'Q2', 'Q3', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q16', 'Q17', 'Q18', 'Q19', 'Q21', 'Q22', 'Q24', 'Q25', 'Q27', 'Q28', 'Q30', 'Q31', 'Q33', 'Q34', 'Q58', 'Q37_1', 'Q37_2', 'Q37_3', 'Q37_4', 'Q37_5', 'Q38_1', 'Q38_2', 'Q38_3', 'Q38_4', 'Q38_5']
+
+
+sig = pd.DataFrame(columns=[list], index = df2.index)
+coefficient = pd.DataFrame(columns=[list], index = df2.index)
+
+for i in list:
+    df[f'diff_{i}'].mean()
+    model = smf.ols(formula=f'diff_{i} ~ Course + LGBTQ + Gender + Race + Religion + Course:LGBTQ + Course:Gender + Course:Religion + Course:Race', data=df).fit()
+    model.summary()
+    with open('linear/' + i + '_summary.csv', 'w') as fh:
+        fh.write(model.summary().as_csv())
+
+    model_summary = model.summary()
+    model_as_html = model_summary.tables[1].as_html()
+    df2 = pd.read_html(model_as_html, header=0, index_col=0)[0]
+    s = df2['P>|t|'] < 0.05
+    sig[i] = s
+    sig.loc['Intercept_all', i] = 1
+    t = df2['coef']['Intercept']
+    q = df2['coef']
+    coefficient[i] = q
+    coefficient.loc['Intercept_all', i] = t
+
+sig = sig.astype(int)
+sig_dir = coefficient * sig
 
 
 
-list = ['Q16', 'Q21', 'Q1', 'Q3', 'Q58', 'Q9', 'Q7', 'Q8', 'Q10', 'Q11', 'Q13', 'Q14', 'Q17', 'Q18', 'Q19', 'Q2', 'Q22', 'Q24', 'Q25', 'Q27', 'Q28', 'Q30', 'Q31', 'Q33', 'Q34', 'Q37_1', 'Q37_2', 'Q37_3', 'Q37_4', 'Q37_5', 'Q38_1', 'Q38_2', 'Q38_3', 'Q38_4', 'Q38_5']
+sig_dir_t = sig_dir.transpose()
+sig_dir_t.to_csv('linear/linear_sig_direction.csv')
 
-sig_2 = pd.DataFrame(columns=[list], index = df4.index)
-direction_2 = pd.DataFrame(columns=[list], index = df4.index)
 
-q.index = direction_2.index
+
+
 # model = smf.ols(formula=f'diff_{i} ~ Course + LGBTQ + Gender + Race + AnxietyDepression + Religion + Course*LGBTQ + Course*Gender + Course*Religion  + Course*AnxietyDepression', data=df).fit()
 
 for i in list:
-    model = smf.ols(formula=f'diff_{i} ~ Course_Revised + LGBTQ_LGBTQ + Gender_Not_Man + Race_PEER + Religion_Christian + Course_Revised*LGBTQ_LGBTQ + Course_Revised*Gender_Not_Man + Course_Revised*Religion_Christian + Course_Revised*Race_PEER', data=df2).fit()
+    model = smf.ols(formula=f'diff_{i} ~ Course_Revised + LGBTQ_LGBTQ + Gender_Not_Man + Race_PEER + Religion_Christian + Course_Revised*LGBTQ_LGBTQ + Course_Revised*Gender_Not_Man + Course_Revised*Religion_Christian + Course_Revised*Race_PEER', data=df).fit()
     model.summary()
     with open('linear/' + i + '_summary.csv', 'w') as fh:
         fh.write(model.summary().as_csv())
@@ -114,7 +140,6 @@ df_5 = pd.read_csv('tokelsey.csv')
 
 pd.CategoricalDtype(categories=['-6', '-5', '-4', '-3', '-2', '-1', '0', '1', '2', '3', '4', '5', '6'], ordered=True)
 
-df['Course'] = df.loc[:, 'pre_Course']
 
 df['LGBTQ'].value_counts().to_csv('LGBTQ_Counts.csv')
 df['Gender'].value_counts().to_csv('Gender_Counts.csv')

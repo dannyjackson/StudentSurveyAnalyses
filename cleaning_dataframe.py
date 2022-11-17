@@ -36,6 +36,9 @@ df.loc[df["LGBTQ"] == "Yes", "LGBTQ"] = 'LGBTQ'
 df.loc[df["LGBTQ"] == "No", "LGBTQ"] = '0_Not_LGBTQ'
 df.loc[df["LGBTQ"] == "Decline to state", "LGBTQ"] = '0_Not_LGBTQ'
 
+# Self identified as LGBTQ, Other, "Straight, ally"
+df.loc[df["RandomID"] == 41529, "LGBTQ"] = '0_Not_LGBTQ'
+
 df.LGBTQ.value_counts()
 
 df.Q40.value_counts()
@@ -55,14 +58,14 @@ df['Religion'] = df.loc[:, 'Q52']
 df.loc[df["Religion"] == "Agnostic (does not have a definite belief about whether God exists or not)", "Religion"] = '0_No_Religion'
 
 df.loc[df["Religion"] == "Nothing in particular", "Religion"] = '0_No_Religion'
-df.loc[df["Religion"] == "Muslim", "Religion"] = 'Other'
+df.loc[df["Religion"] == "Muslim", "Religion"] = 'Abrahamic'
 df.loc[df["Religion"] == "Decline to state", "Religion"] = 'Other'
 df.loc[df["Religion"] == "Other (please describe)", "Religion"] = 'Other'
-df.loc[df["Religion"] == "Christian - Catholic", "Religion"] = 'Christian'
+df.loc[df["Religion"] == "Christian - Catholic", "Religion"] = 'Abrahamic'
 df.loc[df["Religion"] == "Atheist (believes that God does not exist)", "Religion"] = '0_No_Religion'
-df.loc[df["Religion"] == "Christian - Protestant (e.g. Baptist, Lutheran, Methodist, Nondenominational, Presbyterian)", "Religion"] = 'Christian'
-df.loc[df["Religion"] == "Christian - Church of Jesus Christ of Latter-day Saints", "Religion"] = 'Christian'
-df.loc[df["Religion"] == "Jewish", "Religion"] = 'Other'
+df.loc[df["Religion"] == "Christian - Protestant (e.g. Baptist, Lutheran, Methodist, Nondenominational, Presbyterian)", "Religion"] = 'Abrahamic'
+df.loc[df["Religion"] == "Christian - Church of Jesus Christ of Latter-day Saints", "Religion"] = 'Abrahamic'
+df.loc[df["Religion"] == "Jewish", "Religion"] = 'Abrahamic'
 df.loc[df["Religion"] == "Hindu", "Religion"] = 'Other'
 df.loc[df["Religion"] == "Buddhist", "Religion"] = 'Other'
 
@@ -217,8 +220,13 @@ y = (df[df['pre_Religion'] != df['post_Religion']]).groupby(['pre_Religion', 'po
 
 # Here, edit the file by hand to add in a "Recode" column
 df[df['pre_Religion'] != df['post_Religion']]
-df[df['pre_Religion'] != df['post_Religion']]['pre_Religion']
+df.loc[df['pre_Religion'] != df['post_Religion']][['pre_RandomID', 'pre_Q52', 'post_Q52', 'pre_Q52_12_TEXT']]
 df[df['pre_Religion'] != df['post_Religion']]['post_Religion']
+
+#this person said they were raised Catholic but are no longer religions
+df.loc[df["pre_RandomID"] == 11517, "Religion"] = 'Abrahamic'
+
+
 
 r = pd.read_csv('religion.csv')
 
