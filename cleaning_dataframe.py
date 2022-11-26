@@ -55,19 +55,19 @@ df.Gender.value_counts()
 df.Q52.value_counts()
 
 df['Religion'] = df.loc[:, 'Q52']
-df.loc[df["Religion"] == "Agnostic (does not have a definite belief about whether God exists or not)", "Religion"] = '0_No_Religion'
+df.loc[df["Religion"] == "Agnostic (does not have a definite belief about whether God exists or not)", "Religion"] = '0_Other'
 
-df.loc[df["Religion"] == "Nothing in particular", "Religion"] = '0_No_Religion'
+df.loc[df["Religion"] == "Nothing in particular", "Religion"] = '0_Other'
 df.loc[df["Religion"] == "Muslim", "Religion"] = 'Abrahamic'
-df.loc[df["Religion"] == "Decline to state", "Religion"] = 'Other'
-df.loc[df["Religion"] == "Other (please describe)", "Religion"] = 'Other'
+df.loc[df["Religion"] == "Decline to state", "Religion"] = '0_Other'
+df.loc[df["Religion"] == "Other (please describe)", "Religion"] = '0_Other'
 df.loc[df["Religion"] == "Christian - Catholic", "Religion"] = 'Abrahamic'
-df.loc[df["Religion"] == "Atheist (believes that God does not exist)", "Religion"] = '0_No_Religion'
+df.loc[df["Religion"] == "Atheist (believes that God does not exist)", "Religion"] = '0_Other'
 df.loc[df["Religion"] == "Christian - Protestant (e.g. Baptist, Lutheran, Methodist, Nondenominational, Presbyterian)", "Religion"] = 'Abrahamic'
 df.loc[df["Religion"] == "Christian - Church of Jesus Christ of Latter-day Saints", "Religion"] = 'Abrahamic'
 df.loc[df["Religion"] == "Jewish", "Religion"] = 'Abrahamic'
-df.loc[df["Religion"] == "Hindu", "Religion"] = 'Other'
-df.loc[df["Religion"] == "Buddhist", "Religion"] = 'Other'
+df.loc[df["Religion"] == "Hindu", "Religion"] = '0_Other'
+df.loc[df["Religion"] == "Buddhist", "Religion"] = '0_Other'
 
 
 df.Religion.value_counts()
@@ -223,10 +223,6 @@ df[df['pre_Religion'] != df['post_Religion']]
 df.loc[df['pre_Religion'] != df['post_Religion']][['pre_RandomID', 'pre_Q52', 'post_Q52', 'pre_Q52_12_TEXT']]
 df[df['pre_Religion'] != df['post_Religion']]['post_Religion']
 
-#this person said they were raised Catholic but are no longer religions
-df.loc[df["pre_RandomID"] == 11517, "Religion"] = 'Abrahamic'
-
-
 
 r = pd.read_csv('religion.csv')
 
@@ -234,14 +230,19 @@ for index, row in r.iterrows():
     df.loc[(df['pre_Religion'] != df['post_Religion']) & (df['pre_Q52'] == row[f"pre_Q52"]) & (df['post_Q52'] == row[f"post_Q52"]), 'pre_Religion'] = row[f"Recode"]
     df.loc[(df['pre_Religion'] != df['post_Religion']) & (df['pre_Q52'] == row[f"pre_Q52"]) & (df['post_Q52'] == row[f"post_Q52"]), 'post_Religion'] = row[f"Recode"]
 
-# Changing the individual who listed both "No Religion" and "Christian" to "Christian"
-df.loc[(df['pre_Religion'] != df['post_Religion']), 'post_Religion'] = "Christian"
-
-
 
 conditions = [df['pre_Religion'] == df['post_Religion'], (df['pre_Religion'] != df['post_Religion']) & (df['pre_Religion'] == 'Other'), (df['pre_Religion'] != df['post_Religion']) & (df['post_Religion'] == 'Other'), (df['pre_Religion'] != df['post_Religion']) & (df['post_Religion'] != 'Other') & (df['pre_Religion'] != 'Other')]
 choices = [df['pre_Religion'], df['post_Religion'], df['pre_Religion'], 'Other']
 df['Religion'] = np.select(conditions, choices)
+
+# Changing the individual who listed both "No Religion" and "Christian" to "Christian"
+df.loc[(df['pre_Religion'] != df['post_Religion']), 'post_Religion'] = "Christian"
+
+
+#this person said they were raised Catholic but are no longer religious. Kelsey and I decided to leave them as "not religious"
+# df.loc[df["pre_RandomID"] == 11517, "Religion"] = 'Abrahamic'
+df.loc[df["pre_RandomID"] == 75777, "Religion"] = 'Abrahamic'
+df.loc[df["pre_RandomID"] == 91365, "Religion"] = 'Abrahamic'
 
 df['Religion'].value_counts()
 
@@ -314,3 +315,49 @@ for i in list:
     df['diff_' + i] = df['post_' + i] - df['pre_' + i]
 
 df.to_csv('cleanData_danny.csv')
+
+
+
+df = pd.read_csv('cleanData_danny.csv')
+
+# dfk = pd.read_csv('/Users/danjack/Documents/AnBeh_Revised/Kelsey_nov21/cleanData.csv')
+
+# lump some categories
+df.loc[df["Race"] == "Asian", "Race"] = '0_White'
+df.loc[df["Race"] == "0_White", "Race"] = '0_NotPEER'
+df.loc[df["Religion"] == "Other", "Religion"] = '0_No_Religion'
+df.loc[df["Religion"] == "0_No_Religion", "Religion"] = 'Not_Abrahamic'
+df.loc[df["Religion"] == "Not_Abrahamic", "Religion"] = '0_Not_Abrahamic'
+
+df.loc[df["Race"] == NaN, "Race"] = '0_NotPEER'
+
+df.loc[df.Race.isnull(), "Race"] = '0_NotPEER'
+
+df.Race.value_counts()
+df.Religion.value_counts()
+# Modeling with interactions
+# in python
+
+
+
+pre_Q37_columns = ['pre_Q37_1', 'pre_Q37_2', 'pre_Q37_3', 'pre_Q37_4', 'pre_Q37_5']
+df['pre_Q37_total']= df[pre_Q37_columns].sum(axis=1)
+
+post_Q37_columns = ['post_Q37_1', 'post_Q37_2', 'post_Q37_3', 'post_Q37_4', 'post_Q37_5']
+df['post_Q37_total']= df[post_Q37_columns].sum(axis=1)
+
+diff_Q37_columns = ['diff_Q37_1', 'diff_Q37_2', 'diff_Q37_3', 'diff_Q37_4', 'diff_Q37_5']
+df['diff_Q37_total']= df[diff_Q37_columns].sum(axis=1)
+
+
+pre_Q38_columns = ['pre_Q38_1', 'pre_Q38_2', 'pre_Q38_3', 'pre_Q38_4', 'pre_Q38_5']
+df['pre_Q38_total']= df[pre_Q38_columns].sum(axis=1)
+
+post_Q38_columns = ['post_Q38_1', 'post_Q38_2', 'post_Q38_3', 'post_Q38_4', 'post_Q38_5']
+df['post_Q38_total']= df[post_Q38_columns].sum(axis=1)
+
+diff_Q38_columns = ['diff_Q38_1', 'diff_Q38_2', 'diff_Q38_3', 'diff_Q38_4', 'diff_Q38_5']
+df['diff_Q38_total']= df[diff_Q38_columns].sum(axis=1)
+
+
+df.to_csv('data_Nov22.csv')

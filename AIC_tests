@@ -1,0 +1,32 @@
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Gender + Race + Religion + Course:LGBTQ + Course:Gender + Course:Religion + Course:Race', data=df).fit()
+1147.1038637584604
+
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Gender + Race + Religion + Course:LGBTQ + Course:Religion + Course:Race', data=df).fit()
+model.aic
+1145.1064299747072
+
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Gender + Race + Religion + Course:LGBTQ + Course:Religion', data=df).fit()
+model.aic
+1143.3543189984177
+model.summary()
+
+
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Gender + Religion + Course:LGBTQ + Course:Religion', data=df).fit()
+1141.5616645102207
+
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Religion + Course:LGBTQ + Course:Religion', data=df).fit()
+1139.8036014865088
+
+model1 = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + LGBTQ + Religion + Course:LGBTQ', data=df).fit()
+model.aic
+1138.3862467611125
+model.summary()
+
+model2 = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + Religion + Course:LGBTQ', data=df).fit()
+1138.3862467611125
+model.summary()
+
+
+model = smf.ols(formula=f'post_{i} ~ pre_{i} + Course + Religion', data=df).fit()
+model.summary()
+1139.4545660663748
