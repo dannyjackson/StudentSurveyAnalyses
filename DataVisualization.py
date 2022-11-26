@@ -1,4 +1,5 @@
 # data visualization
+# cd Documents/AnBeh_Revised/SurveyResults
 
 # In command line:
 #conda create -c conda-forge -n spyder-env spyder numpy scipy pandas matplotlib sympy cython
@@ -218,8 +219,27 @@ hist_race.set_xlim([0, 15])
 plt.savefig(f'figures/pre37.png', bbox_inches='tight')
 
 
+model = smf.ols(formula=f'pre_Q37_total ~  LGBTQ + Gender + Race + Religion', data=df).fit()
 
+sm.stats.anova_lm(model, typ=2)
+>>> sm.stats.anova_lm(model, typ=2)
+               sum_sq     df         F    PR(>F)
+LGBTQ       41.365957    1.0  4.240505  0.040799
+Gender       0.164405    1.0  0.016853  0.896842
+Race        21.042404    1.0  2.157098  0.143524
+Religion    16.462954    1.0  1.687649  0.195445
+Residual  1902.217377  195.0       NaN       NaN
 
+model = smf.ols(formula=f'pre_Q38_total ~  LGBTQ + Gender + Race + Religion', data=df).fit()
+
+sm.stats.anova_lm(model, typ=2)
+
+               sum_sq     df         F    PR(>F)
+LGBTQ       81.093764    1.0  5.350255  0.021762
+Gender       1.794897    1.0  0.118420  0.731125
+Race        14.759172    1.0  0.973753  0.324969
+Religion     1.204682    1.0  0.079480  0.778302
+Residual  2955.613075  195.0       NaN       NaN
 
 
 
