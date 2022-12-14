@@ -1,3 +1,5 @@
+# cd Documents/AnBeh_Revised/SurveyResults
+
 import pandas as pd
 import scipy
 from scipy import stats
@@ -6,10 +8,25 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
-
+import patsy
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 from sklearn.linear_model import LogisticRegression
 
+# pre surveys
+list = ['Q1', 'Q2', 'Q3', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q16', 'Q17', 'Q18', 'Q19', 'Q21', 'Q22', 'Q24', 'Q25', 'Q27', 'Q28', 'Q30', 'Q31', 'Q33', 'Q34', 'Q58', 'Q37_total', 'Q38_total']
+
+df = pd.read_csv('data_Nov22.csv')
+# Question 1
+
+for i in list:
+    model = smf.ols(formula=f'pre_{i} ~ Course + LGBTQ + Gender + Religion', data=df).fit()
+    y, X = patsy.dmatrices(f'pre_{i} ~ Course + LGBTQ + Gender + Religion', data=df)
+    X_df.as.data.frame(X)
+    backwardSelection(X, y)
+
+
+
+# post surveys
 list = ['Q1', 'Q2', 'Q3', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q16', 'Q17', 'Q18', 'Q19', 'Q21', 'Q22', 'Q24', 'Q25', 'Q27', 'Q28', 'Q30', 'Q31', 'Q33', 'Q34', 'Q58', 'Q37_total', 'Q38_total']
 
 df = pd.read_csv('data_Nov22.csv')
