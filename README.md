@@ -1,5 +1,5 @@
 # StudentSurveyAnalyses
-Scripts to analyze the effect of a revised curriculum on student perceptions and sense of belonging
+All scripts in this repository were written to analyze the effect of a revised curriculum on student perceptions and sense of belonging. Below, please find the working draft of the paper on this project. We are preparing this paper for submission in CBE -- Life Sciences Education
 
 # Title
 Queering Animal Behavior: “Broadening Perspectives” Course Revisions Improve both LGBTQ Student Experiences and All Students’ Content Comprehension
