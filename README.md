@@ -1,5 +1,5 @@
 # StudentSurveyAnalyses
-All scripts in this repository were written to analyze the effect of a revised curriculum on student perceptions and sense of belonging. Below, please find the working draft of the paper on this project. We are preparing this paper for submission in CBE -- Life Sciences Education
+All scripts in this repository were written to analyze the effect of a revised curriculum on student perceptions and sense of belonging. The working draft of this paper [can be accessed here](https://github.com/dannyjackson/StudentSurveyAnalyses/blob/main/Jackson_AnimalBehaviorEducationPaper.pdf). We are preparing this paper for submission in CBE -- Life Sciences Education
 
 # Title
 “Broadening Perspectives” Course Revisions Improve both LGBTQ+ Student Experiences and non-LGBTQ+ Students’ Content Comprehension
